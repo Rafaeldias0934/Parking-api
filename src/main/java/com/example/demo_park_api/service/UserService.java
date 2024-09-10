@@ -4,6 +4,9 @@ import com.example.demo_park_api.entity.User;
 import com.example.demo_park_api.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -11,7 +14,25 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User save(User user) {
+    @Transactional
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
+    @Transactional(readOnly = true)
+    public User getById(Long id) {
+        return userRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("User not found")
+        );
+    }
+    @Transactional
+    public User updatePassword(Long id, String password) {
+        User user = getById(id);
+        user.setPassword(password);
+        return user;
+    }
+
+   @Transactional(readOnly = true)
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+   }
 }
