@@ -2,6 +2,9 @@ package com.example.demo_park_api.web.controller;
 
 import com.example.demo_park_api.entity.User;
 import com.example.demo_park_api.service.UserService;
+import com.example.demo_park_api.web.dto.UserCreateDto;
+import com.example.demo_park_api.web.dto.UserResponseDto;
+import com.example.demo_park_api.web.dto.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,9 +21,10 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> saveUser(@RequestBody User user) {
-        User savedUser = userService.saveUser(user);
-       return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    public ResponseEntity<UserResponseDto> saveUser(@RequestBody UserCreateDto userCreateDto) {
+        User savedUser = userService.saveUser(UserMapper.toUser(userCreateDto));
+       return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(savedUser));
+
     }
 
    @GetMapping("/{id}")
