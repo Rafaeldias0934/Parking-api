@@ -34,14 +34,14 @@ public class UserController {
    }
 
    @PatchMapping("/{id}")
-    public ResponseEntity<UserResponseDto> updatePassoword(@PathVariable Long id, @RequestBody UserPasswordDto userPasswordDto) {
+    public ResponseEntity<Void> updatePassoword(@PathVariable Long id, @RequestBody UserPasswordDto userPasswordDto) {
         User savedPassword = userService.updatePassword(id, userPasswordDto.getCurrentPassword(), userPasswordDto.getNewPassword(), userPasswordDto.getConfirmNewPassword());
-        return ResponseEntity.ok(UserMapper.toDto(savedPassword));
+        return ResponseEntity.noContent().build();
    }
 
    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
        List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(UserMapper.dtoList(users));
    }
 }
