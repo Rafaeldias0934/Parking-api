@@ -38,7 +38,6 @@ public class UserController {
             @ApiResponse(responseCode = "422", description = "Resource not processed due to invalid input data",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
             }
-
     )
     @PostMapping
     public ResponseEntity<UserResponseDto> saveUser(@Valid @RequestBody UserCreateDto userCreateDto) {
@@ -54,7 +53,6 @@ public class UserController {
                     @ApiResponse(responseCode = "404", description = "Resource not found",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
             }
-
     )
    @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getById(@PathVariable Long id) {
@@ -69,9 +67,10 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "Password not to match",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "404", description = "Resource not found",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "422", description = "Fields Invalids or not formatted",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
             }
-
     )
    @PatchMapping("/{id}")
     public ResponseEntity<Void> updatePassoword(@PathVariable Long id,@Valid @RequestBody UserPasswordDto userPasswordDto) {
@@ -85,7 +84,6 @@ public class UserController {
                             content = @Content(mediaType = "application/json",
                                     array = @ArraySchema(schema = @Schema(implementation = UserResponseDto.class))))
             }
-
     )
    @GetMapping
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
