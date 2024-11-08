@@ -7,6 +7,7 @@ import com.example.demo_park_api.exception.UsernameUniqueViolationException;
 import com.example.demo_park_api.exception.ValidateCurrentPasswordException;
 import com.example.demo_park_api.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +18,12 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public User saveUser(User user) {
         try {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepository.save(user);
         } catch (org.springframework.dao.DataIntegrityViolationException ex) {
             throw new UsernameUniqueViolationException(String.format("{%s} creation failed: this user is already registered.",user.getUsername()));
@@ -41,11 +44,11 @@ public class UserService {
         }
         
         User user = getById(id);
-        if (!user.getPassword().equals(currentPassword)) {
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             throw new PasswordInvalidException(String.format("Your current Password for user with ID = {%s}, does not match. Please try again.",id));
         }
 
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         return user;
     }
 

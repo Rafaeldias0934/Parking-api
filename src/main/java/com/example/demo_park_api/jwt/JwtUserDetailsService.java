@@ -21,7 +21,17 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     public  JwtToken getTokenAuthenticated(String username) {
-        User.Role role = userService.findRoleByUsername(username);
-        return JwtUtils.createToken(username, role.name().substring("ROLE_".length()));
+       User.Role role = userService.findRoleByUsername(username);
+
+        if (role != null) {
+            String roleName = role.name();
+            String roleNameWithoutPrefix = roleName.startsWith("ROLE_ ") ?
+                    roleName.substring("ROLE_".length()) : roleName;
+
+            return JwtUtils.createToken(username, roleNameWithoutPrefix);
+        } else {
+            throw new IllegalArgumentException("Role not found for username: " + username);
+        }
+
     }
 }
