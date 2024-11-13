@@ -22,6 +22,17 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 @Configuration
 public class SpringSecurityConfig {
 
+    private static final String[] DOCUMENTATION_OPENAPI = {
+            "/docs/index.html",
+            "/docs-parking.html", "/docs-parking/**",
+            "/v3/api-docs/**",
+            "/swagger-ui-custom.html", "/swagger-ui.html", "/swagger-ui/**",
+            "/**.html", "/webjars/**", "/configuration/**", "swagger-resources/**"
+    };
+
+
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -31,6 +42,7 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(antMatcher(HttpMethod.POST, "/api/v1/users")).permitAll()
                         .requestMatchers(antMatcher(HttpMethod.POST, "/api/v1/auth")).permitAll()
+                        .requestMatchers(DOCUMENTATION_OPENAPI).permitAll()
                         .anyRequest().authenticated()
                 ).sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
