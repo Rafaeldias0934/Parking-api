@@ -69,10 +69,7 @@ public class UserController {
     @Operation(summary = "Update password", description = "The request requires a Bearer token. Access is restricted to ADMIN or CLIENT",
             security = @SecurityRequirement(name = "security"),
             responses = {
-                    @ApiResponse(responseCode = "204", description = "updated password successfully",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))),
-                    @ApiResponse(responseCode = "403", description = "User does not have permission to access this resource",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "204", description = "updated password successfully"),
                     @ApiResponse(responseCode = "400", description = "Password not to match",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "404", description = "Resource not found",
@@ -84,7 +81,7 @@ public class UserController {
    @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT') AND (#id == authentication.principal.id)")
     public ResponseEntity<Void> updatePassoword(@PathVariable Long id,@Valid @RequestBody UserPasswordDto userPasswordDto) {
-        User savedPassword = userService.updatePassword(id, userPasswordDto.getCurrentPassword(), userPasswordDto.getNewPassword(), userPasswordDto.getConfirmNewPassword());
+        userService.updatePassword(id, userPasswordDto.getCurrentPassword(), userPasswordDto.getNewPassword(), userPasswordDto.getConfirmNewPassword());
         return ResponseEntity.noContent().build();
    }
 
