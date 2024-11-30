@@ -13,20 +13,26 @@ import com.example.demo_park_api.web.dto.mapper.ClientMapper;
 import com.example.demo_park_api.web.dto.mapper.PageableMapper;
 import com.example.demo_park_api.web.exception.ErrorMessage;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.Query;
 import java.util.List;
 
 @Tag(name = "Clients", description = "All operations related to client management")
@@ -41,6 +47,7 @@ public class ClientController {
 
     @Operation(summary = "To create a new user", description = "Resource for create a new user, linked to an already registered user. " +
             "Request requires the use of a bearer token. Access is restricted to the 'CLIENT' role",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "201", description = "resource created successfully",
                             content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ClientResponseDto.class))),
@@ -64,6 +71,7 @@ public class ClientController {
 
     @Operation(summary = "Get user by ID", description = "Resource for retrieving a user their unique ID. " +
             "Request requires the use of a bearer token. Access is restricted to the 'ADMIN' role",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Resource retrieving successfully",
                             content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ClientResponseDto.class))),
@@ -80,10 +88,55 @@ public class ClientController {
         return ResponseEntity.ok(ClientMapper.toDto(client));
     }
 
+    @Operation(summary = "Recover the client list", description = "Request requires the use of a bearer token. Access is restricted to the 'ADMIN' role",
+            security = @SecurityRequirement(name = "security"),
+            parameters = {
+                    @Parameter(in = ParameterIn.QUERY, name = "page",
+                            content = @Content(schema = @Schema(type = "integer", defaultValue = "0")),
+                            description = "Representation of the page retrieved"
+                    ),
+                    @Parameter(in = ParameterIn.QUERY, name = "size",
+                            content = @Content(schema = @Schema(type = "integer", defaultValue = "20")),
+                            description = "Representation of the entirety of the elements per page"
+                    ),
+                    @Parameter(in = ParameterIn.QUERY, name = "sort", hidden = true,
+                            array = @ArraySchema(schema = @Schema(type = "string", defaultValue = "id, asc")),
+                            description = "Represents the ordering of the results. Multiple criteria sorting are supported")
+
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Resource retrieving successfully",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ClientResponseDto.class))
+                    ),
+                   @ApiResponse(responseCode = "403", description = "Resource access is forbidden to the CLIENT role",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))
+                   )
+            })
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<PageableDto> getAll(Pageable pageable) {
+    public ResponseEntity<PageableDto> getAll(@Parameter(hidden = true) @PageableDefault(size = 5, sort = {"name"}) Pageable pageable) {
         Page<ClientProjection> clients = clientService.getAll(pageable);
         return ResponseEntity.ok(PageableMapper.pageableDto(clients));
+    }
+
+    @Operation(summary = "retrieving client details", description = "Resource for the client retrieve their data. " +
+            "Request requires the use of a bearer token. Access is restricted to the 'CLIENT' role",
+            security = @SecurityRequirement(name = "security"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Client details retrieved successfully",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ClientResponseDto.class))),
+                    @ApiResponse(responseCode = "403", description = "Only users with 'Client' role, can access this resource",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class)))
+            })
+    @GetMapping("/details")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<ClientResponseDto> getClientDetails(@AuthenticationPrincipal JwtUserDetails jwtUserDetails) {
+        Client client = clientService.getByUserId(jwtUserDetails.getId());
+        if (client == null) {
+           return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(ClientMapper.toDto(client));
     }
 }
