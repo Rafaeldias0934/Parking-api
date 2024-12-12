@@ -44,6 +44,9 @@ public class SpotController {
                                     schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "422", description = "Entity unprocessed: Invalids or faulty data",
                             content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "403", description = "Access Denied",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
                                     schema = @Schema(implementation = ErrorMessage.class)))
             })
     @PostMapping
@@ -66,6 +69,9 @@ public class SpotController {
                             content = @Content(mediaType = "application/json;charset=UTF-8",
                                     schema = @Schema(implementation = SpotResponseDto.class))),
                     @ApiResponse(responseCode = "404", description = "Parking spot not found",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "403", description = "Access Denied",
                             content = @Content(mediaType = "application/json;charset=UTF-8",
                                     schema = @Schema(implementation = ErrorMessage.class)))
             })

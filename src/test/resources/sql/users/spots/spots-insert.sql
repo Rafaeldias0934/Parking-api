@@ -5,7 +5,7 @@ insert into USERS(id, username, password, role) values (103, 'rnferreira@gmail.c
 insert into USERS(id, username, password, role) values (104, 'tiguan@gmail.com', '$2a$12$dLfEmdLUetxkl0eTNEzMNu7KNFMb8bmLWmTXWS/R4cERL8FTKFJfe', 'ROLE_CLIENT');
 
 
-insert into CLIENTS (id, name, cpf, user_id) values (5, 'Rafael Santos', '00992999090', 101);
-insert into CLIENTS (id, name, cpf, user_id) values (6, 'Roberto Santos', '99106729010', 102);
-insert into CLIENTS (id, name, cpf, user_id) values (7, 'Robert Santos', '29886664070', 103);
-insert into CLIENTS (id, name, cpf, user_id) values (8, 'Ricardo Silva', '77877531028', 104);
+insert into parking_spots(id, code, status) values (10, 'A-01', 'AVAILABLE');
+insert into parking_spots(id, code, status) values (6, 'A-02', 'AVAILABLE');
+insert into parking_spots(id, code, status) values (7, 'A-03', 'OCCUPIED');
+insert into parking_spots(id, code, status) values (8, 'A-04', 'AVAILABLE');

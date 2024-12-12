@@ -26,6 +26,7 @@ public class SpotService {
         }
     }
 
+    @Transactional(readOnly = true)
     public ParkingSpots getByCode(String code) {
         return spotRepository.findByCode(code).orElseThrow(
                 () -> new EntityNotFoundException(String.format("The parking spot with code '%s', not found", code))
