@@ -22,6 +22,7 @@ public class ParkedVehicleResponseDto {
     private String receipt;
     private LocalDate entryDate;
     private LocalDateTime exitDate;
+    private String SpotCode;
     private BigDecimal value;
     private BigDecimal discount;
 }

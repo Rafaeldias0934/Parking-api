@@ -9,6 +9,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.example.demo_park_api.entity.ParkingSpots.SpotStatus.AVAILABLE;
+
 @RequiredArgsConstructor
 @Service
 public class SpotService {
@@ -30,6 +32,13 @@ public class SpotService {
     public ParkingSpots getByCode(String code) {
         return spotRepository.findByCode(code).orElseThrow(
                 () -> new EntityNotFoundException(String.format("The parking spot with code '%s', not found", code))
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public ParkingSpots getBySpotAvailable() {
+        return spotRepository.findFirstByStatus(AVAILABLE).orElseThrow(
+                () -> new EntityNotFoundException("No Available spot was found")
         );
     }
 }

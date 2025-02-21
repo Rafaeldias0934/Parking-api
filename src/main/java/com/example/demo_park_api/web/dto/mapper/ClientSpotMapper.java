@@ -3,6 +3,7 @@ package com.example.demo_park_api.web.dto.mapper;
 import com.example.demo_park_api.entity.ClientSpot;
 import com.example.demo_park_api.web.dto.ParkedVehicleCreateDto;
 import com.example.demo_park_api.web.dto.ParkedVehicleResponseDto;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
