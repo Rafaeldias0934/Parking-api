@@ -9,5 +9,5 @@ public interface SpotRepository extends JpaRepository<ParkingSpots, Long> {
 
    Optional<ParkingSpots> findByCode(String code);
 
-   Optional<ParkingSpots> findFirstByStatus(ParkingSpots.SpotStatus spotStatus);
+   Optional<ParkingSpots> findFirstBySpotStatus(ParkingSpots.SpotStatus spotStatus);
 }

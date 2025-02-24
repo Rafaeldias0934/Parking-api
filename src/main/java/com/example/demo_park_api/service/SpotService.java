@@ -37,7 +37,7 @@ public class SpotService {
 
     @Transactional(readOnly = true)
     public ParkingSpots getBySpotAvailable() {
-        return spotRepository.findFirstByStatus(AVAILABLE).orElseThrow(
+        return spotRepository.findFirstBySpotStatus(AVAILABLE).orElseThrow(
                 () -> new EntityNotFoundException("No Available spot was found")
         );
     }

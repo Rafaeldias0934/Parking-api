@@ -57,7 +57,7 @@ public class ClientSpot {
 
     @ManyToOne
     @JoinColumn(name = "id_parking_spots", nullable = false)
-    private ParkingSpots parkingSpots;
+    private ParkingSpots codeParkingSpots;
 
     @CreatedDate
     @Column(name = "creation_date")

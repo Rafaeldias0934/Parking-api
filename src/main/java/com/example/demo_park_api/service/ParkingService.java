@@ -19,13 +19,13 @@ public class ParkingService {
     private final SpotService spotService;
 
     @Transactional
-    public ClientSpot ckeckIn(ClientSpot clientSpot) {
+    public ClientSpot checkIn(ClientSpot clientSpot) {
         Client client = clientService.getByCpf(clientSpot.getClient().getCpf());
         clientSpot.setClient(client);
 
         ParkingSpots parkingSpots = spotService.getBySpotAvailable();
         parkingSpots.setSpotStatus(ParkingSpots.SpotStatus.OCCUPIED);
-        clientSpot.setParkingSpots(parkingSpots);
+        clientSpot.setCodeParkingSpots(parkingSpots);
 
         clientSpot.setEntryDate(LocalDateTime.now());
         clientSpot.setReceipt(ParkingUtils.generateReceipt());

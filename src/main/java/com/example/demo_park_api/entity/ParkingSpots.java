@@ -16,7 +16,7 @@ import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Entity
-@Table(name = "ParkingSpots")
+@Table(name = "parking_spots")
 @EntityListeners(AuditingEntityListener.class)
 public class ParkingSpots  implements Serializable {
 
@@ -27,9 +27,10 @@ public class ParkingSpots  implements Serializable {
     @Column(name = "code", nullable = false, unique = true, length = 4)
     private String code;
 
-    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private SpotStatus spotStatus;
+
     @CreatedDate
     @Column(name = "creation_date")
     private LocalDateTime creationDate;

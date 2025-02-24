@@ -17,6 +17,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/parking")
@@ -26,17 +28,14 @@ public class ParkingController {
 
     @PostMapping("/check-in")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ParkedVehicleResponseDto> checkin(@RequestBody @Valid ParkedVehicleCreateDto parkedVehicleCreateDto) {
+    public ResponseEntity<ParkedVehicleResponseDto> checkIn(@RequestBody @Valid ParkedVehicleCreateDto parkedVehicleCreateDto) {
         ClientSpot clientSpot = ClientSpotMapper.toParkedVehicleCreateDto(parkedVehicleCreateDto);
-        parkingService.ckeckIn(clientSpot);
-
+        parkingService.checkIn(clientSpot);
         ParkedVehicleResponseDto responseDto = ClientSpotMapper.toParkedVehicleResponseDto(clientSpot);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequestUri().path("/{receipt}")
                 .buildAndExpand(clientSpot.getReceipt())
                 .toUri();
         return ResponseEntity.created(location).body(responseDto);
-
-
     }
 }
