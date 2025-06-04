@@ -32,4 +32,5 @@ public class ParkingService {
 
         return clientSpotService.save(clientSpot);
     }
+
 }

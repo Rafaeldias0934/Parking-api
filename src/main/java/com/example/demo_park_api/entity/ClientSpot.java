@@ -1,5 +1,6 @@
 package com.example.demo_park_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,10 +46,10 @@ public class ClientSpot {
     @Column(name = "exit_date")
     private LocalDateTime exitDate;
 
-    @Column(name = "value", columnDefinition = "decimal(7,2)")
+    @Column(name = "total_value", columnDefinition = "double")
     private BigDecimal value;
 
-    @Column(name = "discount", columnDefinition = "decimal(7,2)")
+    @Column(name = "discount", columnDefinition = "double")
     private BigDecimal discount;
 
     @ManyToOne

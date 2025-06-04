@@ -1,3 +1,3 @@
-insert into USERS(id, username, password, role) values (100, 'rldias@gmail.com', '$2a$12$dLfEmdLUetxkl0eTNEzMNu7KNFMb8bmLWmTXWS/R4cERL8FTKFJfe', 'ROLE_ADMIN');
-insert into USERS(id, username, password, role) values (101, 'leafar@gmail.com', '$2a$12$dLfEmdLUetxkl0eTNEzMNu7KNFMb8bmLWmTXWS/R4cERL8FTKFJfe', 'ROLE_CLIENT');
-insert into USERS(id, username, password, role) values (102, 'rdsantos@gmail.com', '$2a$12$dLfEmdLUetxkl0eTNEzMNu7KNFMb8bmLWmTXWS/R4cERL8FTKFJfe', 'ROLE_CLIENT');
+insert into users(id, username, password, role) values (100, 'admin@gmail.com', '$2a$10$wK9DWx9YrZ3A8Ae0m.8Yt.8vUo2ZHYQtvYe1Zgq3hjMp6EGSgHIXy', 'ROLE_ADMIN');
+insert into users(id, username, password, role) values (101, 'leafar@gmail.com', '$2a$12$dLfEmdLUetxkl0eTNEzMNu7KNFMb8bmLWmTXWS/R4cERL8FTKFJfe', 'ROLE_CLIENT');
+insert into users(id, username, password, role) values (102, 'rdsantos@gmail.com', '$2a$12$dLfEmdLUetxkl0eTNEzMNu7KNFMb8bmLWmTXWS/R4cERL8FTKFJfe', 'ROLE_CLIENT');

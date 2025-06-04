@@ -1,12 +1,15 @@
 package com.example.demo_park_api.web.controller;
 
 import com.example.demo_park_api.entity.ClientSpot;
+import com.example.demo_park_api.service.ClientSpotService;
 import com.example.demo_park_api.service.ParkingService;
 import com.example.demo_park_api.web.dto.ParkedVehicleCreateDto;
 import com.example.demo_park_api.web.dto.ParkedVehicleResponseDto;
 import com.example.demo_park_api.web.dto.mapper.ClientSpotMapper;
 import com.example.demo_park_api.web.exception.ErrorMessage;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,10 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -33,6 +33,7 @@ import java.net.URI;
 public class ParkingController {
 
     private final ParkingService parkingService;
+    private final ClientSpotService clientSpotService;
 
     @Operation(summary = "operation in the Check-in", description = "Feature to register a vehicle in the parking lot. " +
     "Resource requires a bearer token, access restricted to Role='ADMIN'.",
@@ -65,5 +66,27 @@ public class ParkingController {
                 .buildAndExpand(clientSpot.getReceipt())
                 .toUri();
         return ResponseEntity.created(location).body(responseDto);
+    }
+
+    @Operation(summary = "Retrieve parked vehicle by receipt number", description = "Returns details of a parked vehicle using the receipt number " +
+            "This endpoint requires a bearer token for authentication.",
+            security = @SecurityRequirement(name = "security"),
+            parameters = {
+                @Parameter(in = ParameterIn.PATH, name = "receipt", description = "receipt number obtained during Check-in")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Resource location successfully",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ParkedVehicleResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "receipt number not found.",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+            })
+    @GetMapping("/check-in/{receipt}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    public ResponseEntity<ParkedVehicleResponseDto> getByReceipt(@PathVariable String receipt) {
+        ClientSpot clientSpot = clientSpotService.getByReceipt(receipt);
+        ParkedVehicleResponseDto dto = ClientSpotMapper.toParkedVehicleResponseDto(clientSpot);
+        return ResponseEntity.ok(dto);
     }
 }

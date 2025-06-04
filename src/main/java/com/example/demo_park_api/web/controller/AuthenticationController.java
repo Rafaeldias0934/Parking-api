@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 
 @Tag(name = "Authentication", description = "resource of proceed with the authentication on the API")
 @Slf4j
@@ -48,6 +50,7 @@ public class AuthenticationController {
     @PostMapping("/auth")
     public ResponseEntity<?> authenticate(@RequestBody @Valid UserSignInDto dto, HttpServletRequest request) {
         log.info("Process of authentication by login {}", dto.getUsername());
+
         try {
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
@@ -61,4 +64,5 @@ public class AuthenticationController {
                 .badRequest()
                 .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST,"Credentials Invalids"));
     }
+
 }

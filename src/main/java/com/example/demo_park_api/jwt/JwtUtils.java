@@ -1,6 +1,7 @@
 package com.example.demo_park_api.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -54,14 +55,14 @@ public class JwtUtils {
 
     }
 
-    public  static Claims getClaimsFromToken(String token) {
+    private static Claims getClaimsFromToken(String token) {
         try {
             return Jwts.parser()
                     .verifyWith(generateKey())
                     .build()
                     .parseSignedClaims(refactorToken(token)).getPayload();
         } catch (JwtException ex) {
-            log.error(String.format("Invalid token {%s}", ex.getMessage()));
+            log.error("Invalid token: {}", ex.getMessage());
         }
         return null;
     }
@@ -74,7 +75,7 @@ public class JwtUtils {
                     .parseSignedClaims(refactorToken(token));
             return true;
         } catch (JwtException ex) {
-            log.error(String.format("Invalid token {%s}", ex.getMessage()));
+            log.error("Invalid token {}", ex.getMessage());
         }
         return false;
     }
