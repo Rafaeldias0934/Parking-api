@@ -89,4 +89,29 @@ public class ParkingController {
         ParkedVehicleResponseDto dto = ClientSpotMapper.toParkedVehicleResponseDto(clientSpot);
         return ResponseEntity.ok(dto);
     }
+
+    @Operation(summary = "Operation in the Checkout", description = "Feature to checkout of a vehicle in the parking. " +
+            "This endpoint requires a bearer token for authentication. Access restricted to Role ='ADMIN'",
+            security = @SecurityRequirement(name = "security"),
+            parameters = {
+                    @Parameter(in = ParameterIn.PATH, name = "receipt", description = "receipt number obtained during Check-out")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Resource updated successfully",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ParkedVehicleResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "receipt number not found." + "the vehicle already by checkout",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "403", description = "No allowed resource fot the Client role",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+            })
+    @PutMapping("/check-out/{receipt}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ParkedVehicleResponseDto> checkout(@PathVariable String receipt) {
+        ClientSpot clientSpot = parkingService.checkout(receipt);
+        ParkedVehicleResponseDto dto = ClientSpotMapper.toParkedVehicleResponseDto(clientSpot);
+        return ResponseEntity.ok(dto);
+    }
 }

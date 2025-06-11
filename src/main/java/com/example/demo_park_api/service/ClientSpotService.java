@@ -26,4 +26,9 @@ public class ClientSpotService {
                 )
         );
     }
+
+    @Transactional(readOnly = true)
+    public long getTotalOfTimesParkingFull(String cpf) {
+        return clientSpotRepository.countByClientCpfAndExitDateIsNotNull(cpf);
+    }
 }
